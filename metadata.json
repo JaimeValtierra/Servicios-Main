@@ -1,0 +1,6 @@
+{
+  "name": "Mi Empresa ERP Lite",
+  "description": "A comprehensive ERP-like system for managing clients, budgets, orders, invoices, and users within a company. Provides dashboard summaries, quick actions, and detailed views for various business documents.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

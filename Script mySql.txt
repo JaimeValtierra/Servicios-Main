@@ -1,0 +1,147 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE clientes (
+  id INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  planta VARCHAR(255),
+  rut VARCHAR(255),
+  contacto VARCHAR(255),
+  correo VARCHAR(255),
+  telefono VARCHAR(255),
+  direccion TEXT,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE estados_fact (
+  id INT NOT NULL AUTO_INCREMENT,
+  estado VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE estados_oc (
+  id INT NOT NULL AUTO_INCREMENT,
+  estado VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE estados_ot (
+  id INT NOT NULL AUTO_INCREMENT,
+  estado VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE estados_presup (
+  id INT NOT NULL AUTO_INCREMENT,
+  estado VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE grupo (
+  id INT NOT NULL AUTO_INCREMENT,
+  dato VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE perfil_usuario (
+  id INT NOT NULL AUTO_INCREMENT,
+  dato VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE tipo_servicio (
+  id INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE usuario (
+  id INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(255) NOT NULL,
+  rut VARCHAR(255) UNIQUE,
+  perfil INT,
+  telefono VARCHAR(255),
+  correo VARCHAR(255),
+  password VARCHAR(255) NOT NULL,
+  grupo INT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (grupo) REFERENCES grupo(id),
+  FOREIGN KEY (perfil) REFERENCES perfil_usuario(id)
+);
+
+CREATE TABLE presupuestos (
+  id INT NOT NULL AUTO_INCREMENT,
+  numero INT NOT NULL UNIQUE,
+  fecha_presup DATE,
+  cliente INT,
+  responsable VARCHAR(255),
+  descripcion TEXT,
+  fecha_revision DATE,
+  estado_p INT,
+  oc VARCHAR(255),
+  neto DECIMAL(15,2),
+  obs TEXT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (cliente) REFERENCES clientes(id),
+  FOREIGN KEY (estado_p) REFERENCES estados_presup(id)
+);
+
+CREATE TABLE ordenes_ot (
+  id INT NOT NULL AUTO_INCREMENT,
+  cliente INT,
+  orden_de_compra VARCHAR(255),
+  fecha_solicitud DATE,
+  solicitante INT,
+  fecha_de_entrega DATE,
+  operador INT,
+  estado_ot INT,
+  factura VARCHAR(255),
+  tipo_servicio INT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (tipo_servicio) REFERENCES tipo_servicio(id),
+  FOREIGN KEY (operador) REFERENCES usuario(id),
+  FOREIGN KEY (estado_ot) REFERENCES estados_ot(id),
+  FOREIGN KEY (cliente) REFERENCES clientes(id),
+  FOREIGN KEY (solicitante) REFERENCES usuario(id)
+);
+
+CREATE TABLE ordenes_oc (
+  id INT NOT NULL AUTO_INCREMENT,
+  numero_oc_cliente VARCHAR(255),
+  cliente INT,
+  fecha_solicitud DATE,
+  fecha_entrega DATE,
+  tipo_servicio INT,
+  ot INT,
+  estado INT,
+  factura VARCHAR(255),
+  PRIMARY KEY (id),
+  FOREIGN KEY (ot) REFERENCES ordenes_ot(id),
+  FOREIGN KEY (estado) REFERENCES estados_oc(id),
+  FOREIGN KEY (tipo_servicio) REFERENCES tipo_servicio(id),
+  FOREIGN KEY (cliente) REFERENCES clientes(id)
+);
+
+CREATE TABLE facturas (
+  id INT NOT NULL AUTO_INCREMENT,
+  numero_fact INT NOT NULL UNIQUE,
+  cliente INT,
+  fecha_fact DATE,
+  orden_oc INT,
+  presupuesto INT,
+  orden_ot INT,
+  fecha_pago DATE,
+  estado INT,
+  neto DECIMAL(15,2),
+  iva DECIMAL(15,2),
+  total DECIMAL(15,2),
+  pagado_dinero DECIMAL(15,2),
+  pendiente_dinero DECIMAL(15,2) AS (total - COALESCE(pagado_dinero, 0)),
+  PRIMARY KEY (id),
+  FOREIGN KEY (estado) REFERENCES estados_fact(id),
+  FOREIGN KEY (orden_ot) REFERENCES ordenes_ot(id),
+  FOREIGN KEY (presupuesto) REFERENCES presupuestos(id),
+  FOREIGN KEY (orden_oc) REFERENCES ordenes_oc(id),
+  FOREIGN KEY (cliente) REFERENCES clientes(id)
+);

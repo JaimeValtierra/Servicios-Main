@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Ingenieros SPA</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.svg">
+  <meta name="theme-color" content="#2C3E50">
+  <script type="importmap">{"imports":{"react":"https://esm.sh/react@19.1.0","react-dom":"https://esm.sh/react-dom@19.1.0","react-dom/client":"https://esm.sh/react-dom@19.1.0/client","react/jsx-runtime":"https://esm.sh/react@19.1.0/jsx-runtime","react-router-dom":"https://esm.sh/react-router-dom@7.6.1"}}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-primary': '#4A90E2',
+            'brand-primary-dark': '#357ABD',
+            'sidebar-bg': '#2C3E50',
+            'sidebar-hover': '#34495E',
+            'sidebar-active': '#4A90E2',
+            'light-gray': '#F7FAFC',
+            'status-pending': '#F59E0B',
+            'status-approved': '#10B981',
+            'status-rejected': '#EF4444',
+            'status-inprogress': '#3B82F6',
+            'status-completed': '#22C55E',
+            'status-paid': '#84CC16',
+            'status-cancelled': '#71717A'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
